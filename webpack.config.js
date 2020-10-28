@@ -1,36 +1,39 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const path = require("path");
+const path = require('path');
+const SRC_DIR = path.join(__dirname, '/src');
+const DIST_DIR = path.join(__dirname, '/public');
 
 module.exports = {
-  entry: "./src/index.js",
+  entry: `${SRC_DIR}/index.jsx`,
   output: {
-    filename: "bundle.[hash].js",
-    path: path.resolve(__dirname, "dist"),
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: "./src/index.html",
-    }),
-  ],
-  resolve: {
-    modules: [__dirname, "src", "node_modules"],
-    extensions: ["*", ".js", ".jsx", ".tsx", ".ts"],
-  },
+    filename: 'bundle.js',
+    path: DIST_DIR
+},
+plugins: [
+  new HtmlWebpackPlugin({
+    template: "./public/index.html",
+  }),
+],
+resolve: {
+  modules: [__dirname, "src", "node_modules"],
+  extensions: ["*", ".js", ".jsx", ".tsx", ".ts"],
+},
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: [/\.jsx$/],
         exclude: /node_modules/,
-        loader: require.resolve("babel-loader"),
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-react', '@babel/preset-env']
+          }
+        }
       },
       {
-        test: /\.css$/,
-        use: ["style-loader", "css-loader"],
-      },
-      {
-        test: /\.png|svg|jpg|gif$/,
-        use: ["file-loader"],
-      },
-    ],
-  },
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      }
+    ]
+  }
 };
